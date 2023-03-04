@@ -3,3 +3,4 @@ prisma
 requests
 bcrypt
 pyjwt
+python-dotenv

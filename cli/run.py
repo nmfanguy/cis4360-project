@@ -10,7 +10,9 @@ if __name__ == "__main__":
 
     # check the URL
     try:
-        requests.get(f"{url}/api/ping")
+        res = requests.get(f"{url}/api/ping")
+        if res.text != "pong":
+            raise Exception("invalid server")
     except:
         print("error: could not connect to server. please try again.")
         exit(1)
@@ -30,14 +32,16 @@ if __name__ == "__main__":
             endpoint = "/api/register"
         elif choice == "2":
             endpoint = "/api/login"
-
+        choice = ""
         
-        res = requests.post(f"{url}{endpoint}", data={"username": username, "password": password})
+        res = requests.post(f"{url}{endpoint}", json={"username": username, "password": password})
         if res.ok:
+            print(f"got: {res.text}")
             token = res.json()["token"]
             break
         else:
-            print("error: could not log you in. please try again.")
+            err_message = res.text
+            print(f"error: could not log you in. {err_message}. please try again.")
     
     # REPL
     while True:
