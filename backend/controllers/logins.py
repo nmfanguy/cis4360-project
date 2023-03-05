@@ -20,16 +20,12 @@ def create_login(request):
     encrypted_username = cipher.encrypt(bytes(request.parsed_body["username"], encoding="utf8"))
     encrypted_password = cipher.encrypt(bytes(request.parsed_body["password"], encoding="utf8"))
 
-    #try:
-    login = prisma.login.create(data={
+    prisma.login.create(data={
         'userId': request.user.id,
         'username': Base64.encode(encrypted_username),
         'password': Base64.encode(encrypted_password),
         'service': request.parsed_body["service"],
     })
-    #except Exception as e:
-        #print(f"error: {e}")
-        #return json_error({"error": str(e)}, 500)
 
     return jsonify({"message": "success"})
 

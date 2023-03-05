@@ -1,12 +1,14 @@
 import base64
+import os
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 def gen_fernet_key(raw_password):
-    bytes_pw = bytes(raw_password, encoding="utf8")
-    idx = 0
-    out_pw = []
-
-    while len(out_pw) < 32:
-        out_pw.append(bytes_pw[idx])
-        idx = (idx + 1) % len(bytes_pw)
-
-    return base64.encodebytes(bytes(out_pw))
+    password = bytes(raw_password, encoding="utf8")
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=b"",
+        iterations=480000,
+    )
+    return base64.urlsafe_b64encode(kdf.derive(password))
