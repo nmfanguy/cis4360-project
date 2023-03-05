@@ -17,7 +17,10 @@ model User {
 }
 
 model Login {
-  id     Int  @id @default(autoincrement())
-  owner  User @relation(fields: [userId], references: [id])
-  userId Int
+  id       Int    @id @default(autoincrement())
+  owner    User   @relation(fields: [userId], references: [id])
+  userId   Int
+  username Bytes
+  password Bytes
+  service  String
 }

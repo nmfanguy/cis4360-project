@@ -4,3 +4,5 @@ requests
 bcrypt
 pyjwt
 python-dotenv
+cryptography
+pyperclip
