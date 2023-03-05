@@ -23,4 +23,5 @@ model Login {
   username Bytes
   password Bytes
   service  String
+  salt     Bytes
 }

@@ -14,7 +14,7 @@ def get_all(request):
 @check_body_data("accountPassword", "username", "password", "service")
 @check_token_header
 def create_login(request):
-    fernet_key = gen_fernet_key(request.parsed_body["accountPassword"])
+    fernet_key, salt = gen_fernet_key(request.parsed_body["accountPassword"])
     cipher = Fernet(fernet_key)
 
     encrypted_username = cipher.encrypt(bytes(request.parsed_body["username"], encoding="utf8"))
@@ -25,6 +25,7 @@ def create_login(request):
         'username': Base64.encode(encrypted_username),
         'password': Base64.encode(encrypted_password),
         'service': request.parsed_body["service"],
+        "salt": Base64.encode(salt),
     })
 
     return jsonify({"message": "success"})
@@ -40,7 +41,8 @@ def get_single(request, id):
 
     matching_service = matching_service[0]
 
-    fernet_key = gen_fernet_key(request.parsed_body["accountPassword"])
+    salt = Base64.decode(matching_service.salt)
+    fernet_key, _salt = gen_fernet_key(request.parsed_body["accountPassword"], salt)
     cipher = Fernet(fernet_key)
 
     raw_username = Base64.decode(matching_service.username)

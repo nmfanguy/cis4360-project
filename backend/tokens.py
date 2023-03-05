@@ -12,7 +12,7 @@ def gen_token(user_id):
     return jwt.encode(
         {
             "id" : user_id,
-            "exp" : datetime.datetime.utcnow() + datetime.timedelta(days=30) 
+            "exp" : datetime.datetime.utcnow() + datetime.timedelta(days=1) 
         }, 
         SECRET, 
         algorithm = "HS256"
